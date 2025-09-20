@@ -1,0 +1,85 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String     @id @default(uuid())
+  name         String
+  email        String     @unique
+  passwordHash String
+  role         Role       @default(CUSTOMER)
+  isTrusted    Boolean    @default(false)
+  bookings     Booking[]
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+}
+
+model Service {
+  id        String           @id @default(uuid())
+  name      String
+  duration  Int
+  price     Float
+  bookings  Booking[]
+  packages  PackageService[]
+  createdAt DateTime         @default(now())
+  updatedAt DateTime         @updatedAt
+}
+
+model Package {
+  id        String           @id @default(uuid())
+  name      String
+  price     Float
+  duration  Int  
+  services  PackageService[]
+  bookings  Booking[]
+  createdAt DateTime         @default(now())
+  updatedAt DateTime         @updatedAt
+}
+
+model PackageService {
+  packageId String
+  serviceId String
+  package   Package @relation(fields: [packageId], references: [id])
+  service   Service @relation(fields: [serviceId], references: [id])
+
+  @@id([packageId, serviceId])
+}
+
+model Booking {
+  id        String        @id @default(uuid())
+  user      User          @relation(fields: [userId], references: [id])
+  userId    String
+
+  service   Service?      @relation(fields: [serviceId], references: [id])
+  serviceId String?
+
+  package   Package?      @relation(fields: [packageId], references: [id])
+  packageId String?
+
+  dateTime  DateTime
+  status    BookingStatus @default(PENDING)
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+}
+
+enum Role {
+  CUSTOMER
+  ADMIN
+}
+
+enum BookingStatus {
+  PENDING
+  APPROVED
+  CANCELLED
+}
