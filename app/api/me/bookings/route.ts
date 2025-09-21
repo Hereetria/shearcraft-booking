@@ -1,14 +1,14 @@
-import { NextResponse } from "next/server"
-import { withAuth } from "@/lib/wrappers/withAuth"
-import { withValidation } from "@/lib/wrappers/withValidation"
-import { withErrorHandling } from "@/lib/wrappers/withErrorHandling"
+import { NextRequest, NextResponse } from "next/server"
+import { requireAuth } from "@/lib/auth/requireAuth"
+import { validate } from "@/lib/validation/validate"
+import { handleError } from "@/lib/errors/error"
 import { bookingService } from "@/services/bookingService"
 import { z } from "zod"
 
 const bookingSchema = z.object({
-  serviceId: z.string().uuid().optional(),
-  packageId: z.string().uuid().optional(),
-  dateTime: z.string().datetime(),
+  serviceId: z.uuid().optional(),
+  packageId: z.uuid().optional(),
+  dateTime: z.iso.datetime(),
 }).refine(
   data =>
     (data.serviceId && !data.packageId) ||
@@ -20,21 +20,28 @@ const bookingSchema = z.object({
   }
 ).strict()
 
-export const GET = withErrorHandling(
-  withAuth(async (_req, { userId }) => {
-    const bookings = await bookingService.getAllForSelf(userId)
-    return NextResponse.json(bookings)
-  })
-)
+export async function GET() {
+  try {
+    const { user } = await requireAuth()
+    const bookings = await bookingService.getAllForSelf(user.id)
+    return NextResponse.json(bookings, { status: 200 })
+  } catch (err) {
+    return handleError(err)
+  }
+}
 
-export const POST = withErrorHandling(
-  withAuth(
-    withValidation(bookingSchema, async (body, _req, { userId }) => {
-      const booking = await bookingService.create({
-        ...body,
-        userId,
-      })
-      return NextResponse.json(booking, { status: 201 })
+export async function POST(req: NextRequest) {
+  try {
+    const { user } = await requireAuth()
+    const body = validate(bookingSchema, await req.json())
+
+    const booking = await bookingService.create({
+      ...body,
+      userId: user.id,
     })
-  )
-)
+
+    return NextResponse.json(booking, { status: 201 })
+  } catch (err) {
+    return handleError(err)
+  }
+}

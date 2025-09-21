@@ -1,20 +1,12 @@
-import { NextResponse } from "next/server";
+import { badRequestError } from "@/lib/errors/httpErrors";
 
 export function requireParam(
   name: string,
   params?: Record<string, string>
-): { ok: true; value: string } | { ok: false; response: Response } {
-  const value = params?.[name];
-
+): string {
+  const value = params?.[name]
   if (!value) {
-    return {
-      ok: false,
-      response: NextResponse.json(
-        { error: `Missing ${name} parameter` },
-        { status: 400 }
-      ),
-    };
+    throw badRequestError(`Missing required param: ${name}`)
   }
-
-  return { ok: true, value };
+  return value
 }

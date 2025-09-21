@@ -1,17 +1,19 @@
-import { NextResponse } from "next/server"
-import { withAuth } from "@/lib/wrappers/withAuth"
-import { withRole } from "@/lib/wrappers/withRole"
-import { withValidation } from "@/lib/wrappers/withValidation"
-import { withErrorHandling } from "@/lib/wrappers/withErrorHandling"
+import { NextRequest, NextResponse } from "next/server"
+import { requireAuth } from "@/lib/auth/requireAuth"
+import { requireRole } from "@/lib/auth/requireRole"
+import { validate } from "@/lib/validation/validate"
+import { handleError } from "@/lib/errors/error"
 import { bookingService } from "@/services/bookingService"
 import { requireParam } from "@/lib/requireParam"
 import { z } from "zod"
 import { Role } from "@prisma/client"
+import { notFoundError } from "@/lib/errors/httpErrors"
+import { RouteContext } from "@/types/routeTypes"
 
 const updateBookingSchema = z.object({
   serviceId: z.uuid().optional(),
   packageId: z.uuid().optional(),
-  dateTime: z.string().datetime().optional(),
+  dateTime: z.iso.datetime().optional(),
 }).refine(
   (data) =>
     (data.serviceId && !data.packageId) ||
@@ -20,45 +22,48 @@ const updateBookingSchema = z.object({
   { message: "Booking must have either a service OR a package" }
 ).strict()
 
-export const GET = withErrorHandling(
-  withAuth(
-    withRole([Role.ADMIN], async (_req, { params }) => {
-      const result = requireParam("id", params)
-      if (!result.ok) return result.response
+export async function GET(_req: NextRequest, context: RouteContext) {
+  try {
+    const { user } = await requireAuth()
+    requireRole(user.role, [Role.ADMIN])
 
-      const booking = await bookingService.getByIdForAdmin(result.value)
-      if (!booking) {
-        return NextResponse.json({ error: "Booking not found" }, { status: 404 })
-      }
+    const id = requireParam("id", await context.params)
+    const booking = await bookingService.getByIdForAdmin(id)
+    if (!booking) {
+      throw notFoundError("Booking not found")
+    }
 
-      return NextResponse.json(booking, { status: 200 })
-    })
-  )
-)
+    return NextResponse.json(booking, { status: 200 })
+  } catch (err) {
+    return handleError(err)
+  }
+}
 
-export const PATCH = withErrorHandling(
-  withAuth(
-    withRole(
-      [Role.ADMIN],
-      withValidation(updateBookingSchema, async (body, _req, { params }) => {
-        const result = requireParam("id", params)
-        if (!result.ok) return result.response
+export async function PATCH(req: NextRequest, context: RouteContext) {
+  try {
+    const { user } = await requireAuth()
+    requireRole(user.role, [Role.ADMIN])
 
-        const updated = await bookingService.update(result.value, {...body})
-        return NextResponse.json(updated, { status: 200 })
-      })
-    )
-  )
-)
+const id = requireParam("id", await context.params)
+    const body = validate(updateBookingSchema, await req.json())
+    const updated = await bookingService.update(id, { ...body })
 
-export const DELETE = withErrorHandling(
-  withAuth(
-    withRole([Role.ADMIN], async (_req, { params }) => {
-      const result = requireParam("id", params)
-      if (!result.ok) return result.response
+    return NextResponse.json(updated, { status: 200 })
+  } catch (err) {
+    return handleError(err)
+  }
+}
 
-      await bookingService.delete(result.value)
-      return NextResponse.json({ success: true }, { status: 200 })
-    })
-  )
-)
+export async function DELETE(_req: NextRequest, context: RouteContext) {
+  try {
+    const { user } = await requireAuth()
+    requireRole(user.role, [Role.ADMIN])
+
+const id = requireParam("id", await context.params)
+    await bookingService.delete(id)
+
+    return NextResponse.json(null, { status: 204 })
+  } catch (err) {
+    return handleError(err)
+  }
+}

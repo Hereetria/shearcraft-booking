@@ -1,8 +1,8 @@
-import { NextResponse } from "next/server"
-import { withAuth } from "@/lib/wrappers/withAuth"
-import { withRole } from "@/lib/wrappers/withRole"
-import { withValidation } from "@/lib/wrappers/withValidation"
-import { withErrorHandling } from "@/lib/wrappers/withErrorHandling"
+import { NextRequest, NextResponse } from "next/server"
+import { requireAuth } from "@/lib/auth/requireAuth"
+import { requireRole } from "@/lib/auth/requireRole"
+import { validate } from "@/lib/validation/validate"
+import { handleError } from "@/lib/errors/error"
 import { serviceService } from "@/services/serviceService"
 import { z } from "zod"
 import { Role } from "@prisma/client"
@@ -14,23 +14,28 @@ const createServiceSchema = z.object({
   duration: z.number().int().positive(),
 }).strict()
 
-export const GET = withErrorHandling(
-  withAuth(
-    withRole([Role.ADMIN], async () => {
-      const services = await serviceService.getAllForAdmin()
-      return NextResponse.json(services, { status: 200 })
-    })
-  )
-)
+export async function GET() {
+  try {
+    const { user } = await requireAuth()
+    requireRole(user.role, [Role.ADMIN])
 
-export const POST = withErrorHandling(
-  withAuth(
-    withRole(
-      [Role.ADMIN],
-      withValidation(createServiceSchema, async (body) => {
-        const created = await serviceService.create(body)
-        return NextResponse.json(created, { status: 201 })
-      })
-    )
-  )
-)
+    const services = await serviceService.getAllForAdmin()
+    return NextResponse.json(services, { status: 200 })
+  } catch (err) {
+    return handleError(err)
+  }
+}
+
+export async function POST(req: NextRequest) {
+  try {
+    const { user } = await requireAuth()
+    requireRole(user.role, [Role.ADMIN])
+
+    const body = validate(createServiceSchema, await req.json())
+    const created = await serviceService.create(body)
+
+    return NextResponse.json(created, { status: 201 })
+  } catch (err) {
+    return handleError(err)
+  }
+}

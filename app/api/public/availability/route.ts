@@ -1,8 +1,12 @@
 import { NextResponse } from "next/server"
 import { bookingService } from "@/services/bookingService"
-import { withErrorHandling } from "@/lib/wrappers/withErrorHandling"
+import { handleError } from "@/lib/errors/error"
 
-export const GET = withErrorHandling(async () => {
-  const slots = await bookingService.getAllForPublic()
-  return NextResponse.json(slots, { status: 200 })
-})
+export async function GET() {
+  try {
+    const slots = await bookingService.getAllForPublic()
+    return NextResponse.json(slots, { status: 200 })
+  } catch (err) {
+    return handleError(err)
+  }
+}

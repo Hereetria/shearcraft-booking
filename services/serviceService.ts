@@ -1,6 +1,7 @@
 import { Prisma } from "@prisma/client"
 import prisma from "@/lib/prisma"
 import { servicePublicProjection, serviceAdminProjection } from "@/lib/projections/serviceProjection"
+import { logInfo } from "@/lib/logger"
 
 export const serviceService = {
   async getAllForAdmin() {
@@ -24,14 +25,20 @@ export const serviceService = {
   },
 
   async create(data: Prisma.ServiceCreateInput) {
-    return prisma.service.create({ data })
+    const service = await prisma.service.create({ data })
+    logInfo("Service created", { serviceId: service.id })
+    return service
   },
 
   async update(id: string, data: Prisma.ServiceUpdateInput) {
-    return prisma.service.update({ where: { id }, data })
+    const service = await prisma.service.update({ where: { id }, data })
+    logInfo("Service updated", { serviceId: service.id })
+    return service
   },
 
   async delete(id: string) {
-    return prisma.service.delete({ where: { id } })
+    const service = await prisma.service.delete({ where: { id } })
+    logInfo("Service deleted", { serviceId: service.id })
+    return service
   },
 }

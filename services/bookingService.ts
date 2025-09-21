@@ -1,6 +1,7 @@
 import prisma from "@/lib/prisma"
-import { bookingSelfProjection, bookingAdminProjection } from "@/lib/projections/bookingProjection"
+import { bookingAdminProjection, bookingSelfProjection } from "@/lib/projections/bookingProjection"
 import { servicePublicProjection } from "@/lib/projections/serviceProjection"
+import { logInfo } from "@/lib/logger"
 
 export const bookingService = {
   async getAllForAdmin() {
@@ -28,12 +29,12 @@ export const bookingService = {
     return booking ? bookingSelfProjection(booking) : null
   },
 
-    async getAllForPublic() {
+  async getAllForPublic() {
     const services = await prisma.service.findMany()
     return services.map(servicePublicProjection)
   },
 
-    async getByIdForPublic(id: string) {
+  async getByIdForPublic(id: string) {
     const service = await prisma.service.findUnique({
       where: { id },
     })
@@ -41,7 +42,7 @@ export const bookingService = {
   },
 
   async create(input: { userId: string; serviceId?: string; packageId?: string; dateTime: string }) {
-    return prisma.booking.create({
+    const booking = await prisma.booking.create({
       data: {
         user: { connect: { id: input.userId } },
         service: input.serviceId ? { connect: { id: input.serviceId } } : undefined,
@@ -49,10 +50,12 @@ export const bookingService = {
         dateTime: input.dateTime,
       },
     })
+    logInfo("Booking created", { bookingId: booking.id, userId: input.userId })
+    return booking
   },
 
   async update(id: string, input: { serviceId?: string; packageId?: string; dateTime?: string }) {
-    return prisma.booking.update({
+    const booking = await prisma.booking.update({
       where: { id },
       data: {
         service: input.serviceId ? { connect: { id: input.serviceId } } : undefined,
@@ -60,10 +63,13 @@ export const bookingService = {
         dateTime: input.dateTime,
       },
     })
+    logInfo("Booking updated", { bookingId: booking.id })
+    return booking
   },
 
-
   async delete(id: string) {
-    return prisma.booking.delete({ where: { id } })
+    const booking = await prisma.booking.delete({ where: { id } })
+    logInfo("Booking deleted", { bookingId: booking.id })
+    return booking
   },
 }

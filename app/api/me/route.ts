@@ -1,14 +1,21 @@
 import { NextResponse } from "next/server"
-import { withAuth } from "@/lib/wrappers/withAuth"
-import { withErrorHandling } from "@/lib/wrappers/withErrorHandling"
+import { requireAuth } from "@/lib/auth/requireAuth"
+import { handleError } from "@/lib/errors/error"
+import { notFoundError } from "@/lib/errors/httpErrors"
 import { userService } from "@/services/userService"
+import { userSelfProjection } from "@/lib/projections/userProjection"
 
-export const GET = withErrorHandling(
-  withAuth(async (_req, { userId }) => {
-    const user = await userService.getByIdForSelf(userId)
-    if (!user) {
-      return NextResponse.json({ error: "User not found" }, { status: 404 })
+export async function GET() {
+  try {
+    const { user } = await requireAuth()
+    const found = await userService.getByIdForSelf(user.id)
+
+    if (!found) {
+      throw notFoundError("User not found")
     }
-    return NextResponse.json(user)
-  })
-)
+
+    return NextResponse.json(userSelfProjection(found), { status: 200 })
+  } catch (err) {
+    return handleError(err)
+  }
+}

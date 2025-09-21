@@ -1,6 +1,7 @@
 import { Prisma } from "@prisma/client"
 import prisma from "@/lib/prisma"
-import { packagePublicProjection, packageAdminProjection } from "@/lib/projections/packageProjection"
+import { packageAdminProjection, packagePublicProjection } from "@/lib/projections/packageProjection"
+import { logInfo } from "@/lib/logger"
 
 export const packageService = {
   async getAllForAdmin() {
@@ -24,14 +25,20 @@ export const packageService = {
   },
 
   async create(data: Prisma.PackageCreateInput) {
-    return prisma.package.create({ data })
+    const pkg = await prisma.package.create({ data })
+    logInfo("Package created", { packageId: pkg.id })
+    return pkg
   },
 
   async update(id: string, data: Prisma.PackageUpdateInput) {
-    return prisma.package.update({ where: { id }, data })
+    const pkg = await prisma.package.update({ where: { id }, data })
+    logInfo("Package updated", { packageId: pkg.id })
+    return pkg
   },
 
   async delete(id: string) {
-    return prisma.package.delete({ where: { id } })
+    const pkg = await prisma.package.delete({ where: { id } })
+    logInfo("Package deleted", { packageId: pkg.id })
+    return pkg
   },
 }

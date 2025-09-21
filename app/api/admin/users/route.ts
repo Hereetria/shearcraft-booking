@@ -1,12 +1,12 @@
-import { NextResponse } from "next/server"
+import { NextRequest, NextResponse } from "next/server"
 import { Role } from "@prisma/client"
-import { withAuth } from "@/lib/wrappers/withAuth"
-import { withRole } from "@/lib/wrappers/withRole"
-import { withValidation } from "@/lib/wrappers/withValidation"
-import { withErrorHandling } from "@/lib/wrappers/withErrorHandling"
+import { requireAuth } from "@/lib/auth/requireAuth"
+import { requireRole } from "@/lib/auth/requireRole"
+import { validate } from "@/lib/validation/validate"
+import { handleError } from "@/lib/errors/error"
 import { userService } from "@/services/userService"
 import { z } from "zod"
-import { zEnumFromPrisma } from "@/lib/zodHelpers"
+import { zEnumFromPrisma } from "@/lib/validation/zodHelpers"
 
 const createUserSchema = z.object({
   name: z.string().min(1),
@@ -16,23 +16,28 @@ const createUserSchema = z.object({
   isTrusted: z.boolean().optional(),
 }).strict()
 
-export const GET = withErrorHandling(
-  withAuth(
-    withRole([Role.ADMIN], async () => {
-      const users = await userService.getAllForAdmin()
-      return NextResponse.json(users)
-    })
-  )
-)
+export async function GET() {
+  try {
+    const { user } = await requireAuth()
+    requireRole(user.role, [Role.ADMIN])
 
-export const POST = withErrorHandling(
-  withAuth(
-    withRole(
-      [Role.ADMIN],
-      withValidation(createUserSchema, async (body) => {
-        const created = await userService.create({ ...body })
-        return NextResponse.json(created, { status: 201 })
-      })
-    )
-  )
-)
+    const users = await userService.getAllForAdmin()
+    return NextResponse.json(users, { status: 200 })
+  } catch (err) {
+    return handleError(err)
+  }
+}
+
+export async function POST(req: NextRequest) {
+  try {
+    const { user } = await requireAuth()
+    requireRole(user.role, [Role.ADMIN])
+
+    const body = validate(createUserSchema, await req.json())
+    const created = await userService.create({ ...body })
+
+    return NextResponse.json(created, { status: 201 })
+  } catch (err) {
+    return handleError(err)
+  }
+}

@@ -1,16 +1,19 @@
-import { NextResponse } from "next/server"
+import { NextRequest, NextResponse } from "next/server"
 import { serviceService } from "@/services/serviceService"
 import { requireParam } from "@/lib/requireParam"
-import { withErrorHandling } from "@/lib/wrappers/withErrorHandling"
+import { handleError } from "@/lib/errors/error"
+import { notFoundError } from "@/lib/errors/httpErrors"
+import { RouteContext } from "@/types/routeTypes"
 
-export const GET = withErrorHandling(async (_req, { params }) => {
-  const result = requireParam("id", params)
-  if (!result.ok) return result.response
-
-  const service = await serviceService.getByIdForPublic(result.value)
-  if (!service) {
-    return NextResponse.json({ error: "Service not found" }, { status: 404 })
+export async function GET(_req: NextRequest, context: RouteContext) {
+  try {
+    const id = requireParam("id", await context.params)
+    const service = await serviceService.getByIdForPublic(id)
+    if (!service) {
+      throw notFoundError("Service not found")
+    }
+    return NextResponse.json(service, { status: 200 })
+  } catch (err) {
+    return handleError(err)
   }
-
-  return NextResponse.json(service, { status: 200 })
-})
+}

@@ -1,12 +1,14 @@
-import { NextResponse } from "next/server"
-import { withAuth } from "@/lib/wrappers/withAuth"
-import { withRole } from "@/lib/wrappers/withRole"
-import { withValidation } from "@/lib/wrappers/withValidation"
-import { withErrorHandling } from "@/lib/wrappers/withErrorHandling"
+import { NextRequest, NextResponse } from "next/server"
+import { requireAuth } from "@/lib/auth/requireAuth"
+import { requireRole } from "@/lib/auth/requireRole"
+import { validate } from "@/lib/validation/validate"
+import { handleError } from "@/lib/errors/error"
 import { packageService } from "@/services/packageService"
 import { requireParam } from "@/lib/requireParam"
 import { z } from "zod"
 import { Role } from "@prisma/client"
+import { notFoundError } from "@/lib/errors/httpErrors"
+import { RouteContext } from "@/types/routeTypes"
 
 const updatePackageSchema = z.object({
   name: z.string().min(1).optional(),
@@ -15,45 +17,48 @@ const updatePackageSchema = z.object({
   duration: z.number().int().positive().optional(),
 }).strict()
 
-export const GET = withErrorHandling(
-  withAuth(
-    withRole([Role.ADMIN], async (_req, { params }) => {
-      const result = requireParam("id", params)
-      if (!result.ok) return result.response
+export async function GET(_req: NextRequest, context: RouteContext) {
+  try {
+    const { user } = await requireAuth()
+    requireRole(user.role, [Role.ADMIN])
 
-      const pkg = await packageService.getByIdForAdmin(result.value)
-      if (!pkg) {
-        return NextResponse.json({ error: "Package not found" }, { status: 404 })
-      }
+    const id = requireParam("id", await context.params)
+    const pkg = await packageService.getByIdForAdmin(id)
+    if (!pkg) {
+      throw notFoundError("Package not found")
+    }
 
-      return NextResponse.json(pkg, { status: 200 })
-    })
-  )
-)
+    return NextResponse.json(pkg, { status: 200 })
+  } catch (err) {
+    return handleError(err)
+  }
+}
 
-export const PATCH = withErrorHandling(
-  withAuth(
-    withRole(
-      [Role.ADMIN],
-      withValidation(updatePackageSchema, async (body, _req, { params }) => {
-        const result = requireParam("id", params)
-        if (!result.ok) return result.response
+export async function PATCH(req: NextRequest, context: RouteContext) {
+  try {
+    const { user } = await requireAuth()
+    requireRole(user.role, [Role.ADMIN])
 
-        const updated = await packageService.update(result.value, body)
-        return NextResponse.json(updated, { status: 200 })
-      })
-    )
-  )
-)
+    const id = requireParam("id", await context.params)
+    const body = validate(updatePackageSchema, await req.json())
+    const updated = await packageService.update(id, body)
 
-export const DELETE = withErrorHandling(
-  withAuth(
-    withRole([Role.ADMIN], async (_req, { params }) => {
-      const result = requireParam("id", params)
-      if (!result.ok) return result.response
+    return NextResponse.json(updated, { status: 200 })
+  } catch (err) {
+    return handleError(err)
+  }
+}
 
-      await packageService.delete(result.value)
-      return NextResponse.json({ success: true }, { status: 200 })
-    })
-  )
-)
+export async function DELETE(_req: NextRequest, context: RouteContext) {
+  try {
+    const { user } = await requireAuth()
+    requireRole(user.role, [Role.ADMIN])
+
+    const id = requireParam("id", await context.params)
+    await packageService.delete(id)
+
+    return NextResponse.json(null, { status: 204 })
+  } catch (err) {
+    return handleError(err)
+  }
+}

@@ -1,6 +1,8 @@
 import { User } from "@prisma/client"
 
-export function userSelfProjection(user: User) {
+type SafeUser = Omit<User, "passwordHash">
+
+export function userSelfProjection(user: SafeUser) {
   return {
     id: user.id,
     name: user.name,
@@ -12,7 +14,7 @@ export function userSelfProjection(user: User) {
   }
 }
 
-export function userAdminProjection(user: User) {
+export function userAdminProjection(user: SafeUser) {
   return {
     id: user.id,
     name: user.name,

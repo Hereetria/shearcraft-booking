@@ -1,8 +1,8 @@
-import { NextResponse } from "next/server"
-import { withAuth } from "@/lib/wrappers/withAuth"
-import { withRole } from "@/lib/wrappers/withRole"
-import { withValidation } from "@/lib/wrappers/withValidation"
-import { withErrorHandling } from "@/lib/wrappers/withErrorHandling"
+import { NextRequest, NextResponse } from "next/server"
+import { requireAuth } from "@/lib/auth/requireAuth"
+import { requireRole } from "@/lib/auth/requireRole"
+import { validate } from "@/lib/validation/validate"
+import { handleError } from "@/lib/errors/error"
 import { bookingService } from "@/services/bookingService"
 import { z } from "zod"
 import { Role } from "@prisma/client"
@@ -11,9 +11,7 @@ const createBookingSchema = z.object({
   userId: z.uuid(),
   serviceId: z.uuid().optional(),
   packageId: z.uuid().optional(),
-  dateTime: z.string().datetime(),
-
-  a: z.string()
+  dateTime: z.iso.datetime()
 }).refine(
   (data) =>
     (data.serviceId && !data.packageId) ||
@@ -21,23 +19,28 @@ const createBookingSchema = z.object({
   { message: "Booking must have either a service OR a package" }
 ).strict()
 
-export const GET = withErrorHandling(
-  withAuth(
-    withRole([Role.ADMIN], async () => {
-      const bookings = await bookingService.getAllForAdmin()
-      return NextResponse.json(bookings, { status: 200 })
-    })
-  )
-)
+export async function GET() {
+  try {
+    const { user } = await requireAuth()
+    requireRole(user.role, [Role.ADMIN])
 
-export const POST = withErrorHandling(
-  withAuth(
-    withRole(
-      [Role.ADMIN],
-      withValidation(createBookingSchema, async (body) => {
-        const created = await bookingService.create({...body})
-        return NextResponse.json(created, { status: 201 })
-      })
-    )
-  )
-)
+    const bookings = await bookingService.getAllForAdmin()
+    return NextResponse.json(bookings, { status: 200 })
+  } catch (err) {
+    return handleError(err)
+  }
+}
+
+export async function POST(req: NextRequest) {
+  try {
+    const { user } = await requireAuth()
+    requireRole(user.role, [Role.ADMIN])
+
+    const body = validate(createBookingSchema, await req.json())
+    const created = await bookingService.create({ ...body })
+
+    return NextResponse.json(created, { status: 201 })
+  } catch (err) {
+    return handleError(err)
+  }
+}
