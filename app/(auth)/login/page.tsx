@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef } from "react";
+import React, { useRef, Suspense } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import LoginForm, { LoginFormRef } from "@/components/forms/LoginForm";
 import SocialAuth from "@/app/(auth)/_components/SocialAuth";
@@ -27,10 +27,12 @@ export default function Page() {
           <LoginHeader />
 
           <CardContent className="space-y-6">
-            <LoginForm ref={loginFormRef} />
-            <SocialAuth />
-            <SignUpLink />
-            <DemoAccounts onDemoLogin={handleDemoLogin} />
+            <Suspense fallback={<p>Loading...</p>}>
+              <LoginForm ref={loginFormRef} />
+              <SocialAuth />
+              <SignUpLink />
+              <DemoAccounts onDemoLogin={handleDemoLogin} />
+            </Suspense>
           </CardContent>
         </Card>
       </div>

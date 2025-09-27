@@ -1,7 +1,7 @@
 "use client";
 
 import { useSession } from "next-auth/react";
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import BookingHeader from "./_components/BookingHeader";
 import BookingList from "./_components/BookingList";
@@ -13,7 +13,7 @@ import {
 } from "./_components/StatusUtils";
 import { Booking } from "./_components/types";
 
-export default function MyBookingsPage() {
+function MyBookingsContent() {
   const { data: session } = useSession();
   const searchParams = useSearchParams();
   const [bookings, setBookings] = useState<Booking[]>([]);
@@ -40,11 +40,9 @@ export default function MyBookingsPage() {
     return bookings.sort((a, b) => {
       const statusOrder = { APPROVED: 0, PENDING: 1, EXPIRED: 2, CANCELLED: 3 };
       const statusDiff = statusOrder[a.status] - statusOrder[b.status];
-
       if (statusDiff === 0) {
         return new Date(a.dateTime).getTime() - new Date(b.dateTime).getTime();
       }
-
       return statusDiff;
     });
   }, [bookings]);
@@ -56,7 +54,6 @@ export default function MyBookingsPage() {
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
-
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
@@ -68,9 +65,7 @@ export default function MyBookingsPage() {
         setIsLoading(true);
 
         try {
-          await fetch("/api/me/bookings/update-expired", {
-            method: "POST",
-          });
+          await fetch("/api/me/bookings/update-expired", { method: "POST" });
         } catch (expiredErr) {
           console.warn("Failed to update expired bookings:", expiredErr);
         }
@@ -79,7 +74,6 @@ export default function MyBookingsPage() {
 
         if (response.ok) {
           const data = await response.json();
-
           const now = new Date();
           const updatedBookings = data.map((booking: Booking) => {
             const bookingTime = new Date(booking.dateTime);
@@ -92,7 +86,6 @@ export default function MyBookingsPage() {
             }
             return booking;
           });
-
           setBookings(updatedBookings);
         } else {
           setError("Failed to fetch bookings");
@@ -112,10 +105,7 @@ export default function MyBookingsPage() {
     const bookingId = searchParams.get("booking");
     if (bookingId) {
       setHighlightedBookingId(bookingId);
-
-      setTimeout(() => {
-        setHighlightedBookingId(null);
-      }, 3000);
+      setTimeout(() => setHighlightedBookingId(null), 3000);
     }
   }, [searchParams]);
 
@@ -140,7 +130,6 @@ export default function MyBookingsPage() {
         })
       );
     }, 30000);
-
     return () => clearInterval(interval);
   }, []);
 
@@ -160,7 +149,6 @@ export default function MyBookingsPage() {
           highlightedBookingId={highlightedBookingId}
         />
 
-        {/* Pagination */}
         {!isLoading && !error && bookings.length > 0 && (
           <Pagination
             currentPage={currentPage}
@@ -172,5 +160,13 @@ export default function MyBookingsPage() {
         )}
       </div>
     </div>
+  );
+}
+
+export default function MyBookingsPage() {
+  return (
+    <Suspense fallback={<p>Loading bookings...</p>}>
+      <MyBookingsContent />
+    </Suspense>
   );
 }

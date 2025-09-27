@@ -1,9 +1,11 @@
-import React from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+"use client";
+
+import { Suspense } from "react";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import ResetPasswordContent from "./ResetPasswordContent";
 import AuthBackground from "@/app/(auth)/_components/AuthBackground";
-import ResetPasswordForm from "@/components/forms/ResetPasswordForm";
-import BackToLoginLink from "./_components/BackToLoginLink";
 import { AuthProvider } from "@/contexts/AuthContext";
+import BackToLoginLink from "@/app/reset-password/_components/BackToLoginLink";
 
 export default function ResetPasswordPage() {
   return (
@@ -22,7 +24,9 @@ export default function ResetPasswordPage() {
           </CardHeader>
 
           <CardContent className="space-y-6">
-            <ResetPasswordForm />
+            <Suspense fallback={<p>Loading reset password...</p>}>
+              <ResetPasswordContent />
+            </Suspense>
             <BackToLoginLink />
           </CardContent>
         </Card>

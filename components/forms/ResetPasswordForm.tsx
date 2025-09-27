@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { useSearchParams, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -24,17 +24,18 @@ const resetPasswordSchema = z
 
 type ResetPasswordFormData = z.infer<typeof resetPasswordSchema>;
 
-const ResetPasswordForm = () => {
+interface ResetPasswordFormProps {
+  token: string | null;
+}
+
+const ResetPasswordForm = ({ token }: ResetPasswordFormProps) => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isSuccess, setIsSuccess] = useState(false);
   const [isValidToken, setIsValidToken] = useState<boolean | null>(null);
-  const searchParams = useSearchParams();
   const router = useRouter();
   const { setIsSubmitting } = useAuth();
-
-  const token = searchParams.get("token");
 
   const {
     register,
@@ -63,7 +64,7 @@ const ResetPasswordForm = () => {
           setErrorMessage("Invalid or expired reset token");
           setIsValidToken(false);
         }
-      } catch (error) {
+      } catch {
         setErrorMessage("Invalid or expired reset token");
         setIsValidToken(false);
       }
