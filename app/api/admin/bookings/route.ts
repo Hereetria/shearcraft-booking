@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server"
 import { requireAuth } from "@/lib/auth/requireAuth"
 import { requireRole } from "@/lib/auth/requireRole"
 import { validate } from "@/lib/validation/validate"
-import { handleError } from "@/lib/errors/error"
+import { handleError } from "@/lib/errors/errorHandler"
 import { bookingService } from "@/services/bookingService"
 import { z } from "zod"
 import { Role } from "@prisma/client"
@@ -11,7 +11,8 @@ const createBookingSchema = z.object({
   userId: z.uuid(),
   serviceId: z.uuid().optional(),
   packageId: z.uuid().optional(),
-  dateTime: z.iso.datetime()
+  duration: z.number().int().positive(),
+  dateTime: z.iso.datetime(),
 }).refine(
   (data) =>
     (data.serviceId && !data.packageId) ||
@@ -31,16 +32,16 @@ export async function GET() {
   }
 }
 
-export async function POST(req: NextRequest) {
-  try {
-    const { user } = await requireAuth()
-    requireRole(user.role, [Role.ADMIN])
+// export async function POST(req: NextRequest) {
+//   try {
+//     const { user } = await requireAuth()
+//     requireRole(user.role, [Role.ADMIN])
 
-    const body = validate(createBookingSchema, await req.json())
-    const created = await bookingService.create({ ...body })
+//     const body = validate(createBookingSchema, await req.json())
+//     const created = await bookingService.create({ ...body })
 
-    return NextResponse.json(created, { status: 201 })
-  } catch (err) {
-    return handleError(err)
-  }
-}
+//     return NextResponse.json(created, { status: 201 })
+//   } catch (err) {
+//     return handleError(err)
+//   }
+// }

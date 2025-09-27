@@ -9,7 +9,7 @@ export function servicePublicProjection(service: Service) {
   }
 }
 
-export function serviceAdminProjection(service: Service) {
+export function serviceAdminProjection(service: Service & { _count?: { bookings: number } }) {
   return {
     id: service.id,
     name: service.name,
@@ -17,5 +17,6 @@ export function serviceAdminProjection(service: Service) {
     price: service.price,
     createdAt: service.createdAt,
     updatedAt: service.updatedAt,
+    _count: service._count
   }
 }

@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server"
 import { requireAuth } from "@/lib/auth/requireAuth"
 import { requireRole } from "@/lib/auth/requireRole"
 import { validate } from "@/lib/validation/validate"
-import { handleError } from "@/lib/errors/error"
+import { handleError } from "@/lib/errors/errorHandler"
 import { serviceService } from "@/services/serviceService"
 import { z } from "zod"
 import { Role } from "@prisma/client"
@@ -26,16 +26,16 @@ export async function GET() {
   }
 }
 
-export async function POST(req: NextRequest) {
-  try {
-    const { user } = await requireAuth()
-    requireRole(user.role, [Role.ADMIN])
+// export async function POST(req: NextRequest) {
+//   try {
+//     const { user } = await requireAuth()
+//     requireRole(user.role, [Role.ADMIN])
 
-    const body = validate(createServiceSchema, await req.json())
-    const created = await serviceService.create(body)
+//     const body = validate(createServiceSchema, await req.json())
+//     const created = await serviceService.create(body)
 
-    return NextResponse.json(created, { status: 201 })
-  } catch (err) {
-    return handleError(err)
-  }
-}
+//     return NextResponse.json(created, { status: 201 })
+//   } catch (err) {
+//     return handleError(err)
+//   }
+// }

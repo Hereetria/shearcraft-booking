@@ -1,4 +1,4 @@
-import { ApiError, fail } from "@/lib/errors/error"
+import { ApiError, fail } from "@/lib/errors/errorHandler"
 
 export const badRequestError = (msg = "Bad Request"): ApiError =>
   fail(400, msg)

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server"
 import { requireAuth } from "@/lib/auth/requireAuth"
-import { handleError } from "@/lib/errors/error"
+import { handleError } from "@/lib/errors/errorHandler"
 import { notFoundError } from "@/lib/errors/httpErrors"
 import { bookingService } from "@/services/bookingService"
 import { requireParam } from "@/lib/requireParam"

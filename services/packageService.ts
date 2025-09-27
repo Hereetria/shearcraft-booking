@@ -5,7 +5,20 @@ import { logInfo } from "@/lib/logger"
 
 export const packageService = {
   async getAllForAdmin() {
-    const packages = await prisma.package.findMany()
+    const packages = await prisma.package.findMany({
+      include: {
+        services: {
+          include: {
+            service: true
+          }
+        },
+        _count: {
+          select: {
+            bookings: true
+          }
+        }
+      }
+    })
     return packages.map(packageAdminProjection)
   },
 

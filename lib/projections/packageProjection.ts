@@ -16,7 +16,7 @@ export function packagePublicProjection(
 }
 
 export function packageAdminProjection(
-  pkg: Package & { services?: { service: Service }[] }
+  pkg: Package & { services?: { service: Service }[]; _count?: { bookings: number } }
 ) {
   return {
     id: pkg.id,
@@ -28,5 +28,6 @@ export function packageAdminProjection(
       : [],
     createdAt: pkg.createdAt,
     updatedAt: pkg.updatedAt,
+    _count: pkg._count
   }
 }

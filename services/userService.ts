@@ -2,7 +2,7 @@ import { Prisma } from "@prisma/client"
 import prisma from "@/lib/prisma"
 import bcrypt from "bcryptjs"
 import { userAdminProjection, userSelfProjection } from "@/lib/projections/userProjection"
-import { logInfo } from "@/lib/logger"
+import { logError, logInfo } from "@/lib/logger"
 
 export const userSafeSelect = {
   id: true,
@@ -10,13 +10,31 @@ export const userSafeSelect = {
   email: true,
   role: true,
   isTrusted: true,
+  emailVerified: true,
+  emailVerifiedAt: true,
+  image: true,
   createdAt: true,
   updatedAt: true,
 } as const
 
 export const userService = {
   async getAllForAdmin() {
-    const users = await prisma.user.findMany({ select: userSafeSelect })
+    const users = await prisma.user.findMany({ 
+      select: {
+        ...userSafeSelect,
+        _count: {
+          select: {
+            bookings: {
+              where: {
+                status: {
+                  in: ['PENDING', 'APPROVED']
+                }
+              }
+            }
+          }
+        }
+      }
+    })
     return users.map(userAdminProjection)
   },
 
@@ -43,7 +61,7 @@ export const userService = {
         name: data.name,
         email: data.email,
         passwordHash,
-        role: data.role,
+        role: data.role ?? "CUSTOMER", 
         isTrusted: data.isTrusted,
       },
     })
@@ -83,7 +101,73 @@ export const userService = {
         email: true,
         passwordHash: true,
         role: true,
+        emailVerified: true,
       },
     })
   },
+
+  async updatePassword(userId: string, passwordHash: string) {
+    return prisma.user.update({
+      where: { id: userId },
+      data: { passwordHash },
+    })
+  },
+
+  async getById(userId: string) {
+    return prisma.user.findUnique({
+      where: { id: userId },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        passwordHash: true,
+        role: true,
+        emailVerified: true,
+      },
+    })
+  },
+
+  async upsertGoogleUser(profile: { 
+    email: string; 
+    name: string; 
+    picture?: string; 
+  }) {
+    try {
+      const user = await prisma.user.upsert({
+        where: { email: profile.email },
+        update: {
+          name: profile.name,
+          image: profile.picture,
+          updatedAt: new Date(),
+        },
+        create: {
+          name: profile.name,
+          email: profile.email,
+          role: "CUSTOMER",
+          emailVerified: true,
+          emailVerifiedAt: new Date(),
+          image: profile.picture,
+        },
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          role: true,
+          emailVerified: true,
+          image: true,
+        },
+      });
+  
+      logInfo(user ? "Google user upserted" : "Google user created", {
+        userId: user.id,
+        email: user.email,
+      });
+  
+      return user;
+    } catch (error) {
+      logError(error, `Failed to upsert Google user: ${profile.email}`);
+      throw new Error("Failed to create or update Google user");
+    }
+  }
+  
 }

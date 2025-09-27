@@ -9,12 +9,14 @@ export function bookingSelfProjection(
     id: booking.id,
     dateTime: booking.dateTime,
     status: booking.status,
+    duration: booking.duration, 
     service: booking.service
       ? servicePublicProjection(booking.service)
       : null,
     package: booking.package
       ? packagePublicProjection(booking.package)
       : null,
+    services: booking.services as unknown, 
     createdAt: booking.createdAt,
     updatedAt: booking.updatedAt,
   }
@@ -27,6 +29,7 @@ export function bookingAdminProjection(
     id: booking.id,
     dateTime: booking.dateTime,
     status: booking.status,
+    duration: booking.duration, 
     user: {
       id: booking.user.id,
       name: booking.user.name,
@@ -38,6 +41,7 @@ export function bookingAdminProjection(
     package: booking.package
       ? packagePublicProjection(booking.package)
       : null,
+    services: booking.services as unknown, 
     createdAt: booking.createdAt,
     updatedAt: booking.updatedAt,
   }
@@ -48,5 +52,6 @@ export function bookingPublicProjection(booking: Booking) {
     id: booking.id,
     dateTime: booking.dateTime,
     status: booking.status,
+    duration: booking.duration, 
   }
 }

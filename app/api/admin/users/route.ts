@@ -3,7 +3,7 @@ import { Role } from "@prisma/client"
 import { requireAuth } from "@/lib/auth/requireAuth"
 import { requireRole } from "@/lib/auth/requireRole"
 import { validate } from "@/lib/validation/validate"
-import { handleError } from "@/lib/errors/error"
+import { handleError } from "@/lib/errors/errorHandler"
 import { userService } from "@/services/userService"
 import { z } from "zod"
 import { zEnumFromPrisma } from "@/lib/validation/zodHelpers"
@@ -28,16 +28,16 @@ export async function GET() {
   }
 }
 
-export async function POST(req: NextRequest) {
-  try {
-    const { user } = await requireAuth()
-    requireRole(user.role, [Role.ADMIN])
+// export async function POST(req: NextRequest) {
+//   try {
+//     const { user } = await requireAuth()
+//     requireRole(user.role, [Role.ADMIN])
 
-    const body = validate(createUserSchema, await req.json())
-    const created = await userService.create({ ...body })
+//     const body = validate(createUserSchema, await req.json())
+//     const created = await userService.create({ ...body })
 
-    return NextResponse.json(created, { status: 201 })
-  } catch (err) {
-    return handleError(err)
-  }
-}
+//     return NextResponse.json(created, { status: 201 })
+//   } catch (err) {
+//     return handleError(err)
+//   }
+// }

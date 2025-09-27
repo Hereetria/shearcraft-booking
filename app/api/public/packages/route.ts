@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server"
 import { packageService } from "@/services/packageService"
-import { handleError } from "@/lib/errors/error"
+import { handleError } from "@/lib/errors/errorHandler"
 
 export async function GET() {
   try {

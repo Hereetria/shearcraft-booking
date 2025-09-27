@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server"
 import { packageService } from "@/services/packageService"
 import { requireParam } from "@/lib/requireParam"
-import { handleError } from "@/lib/errors/error"
+import { handleError } from "@/lib/errors/errorHandler"
 import { notFoundError } from "@/lib/errors/httpErrors"
 import { RouteContext } from "@/types/routeTypes"
 
