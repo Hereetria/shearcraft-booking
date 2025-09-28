@@ -59,7 +59,6 @@ Built with cutting-edge technologies, it delivers an intuitive user experience w
 - Error boundaries and validation in place  
 - Structured, production-ready codebase  
 - Built with clean code principles and best practices  
-- Cursor AI assisted development (especially in design)  
 
 ## ⚙️ Technical Highlights
 
@@ -100,11 +99,16 @@ Built with cutting-edge technologies, it delivers an intuitive user experience w
 - Light/Dark styling limited to navbar  
 
 ### 🔧 Development
-- **pnpm**, **Turbopack** for fast builds  
-- **ESLint + Prettier** for code quality  
+- pnpm, Turbopack for fast builds  
+- ESLint + Prettier for code quality  
 - Error boundaries & structured codebase  
-- Built with **clean code principles** and **best practices**  
-- **Cursor AI** used extensively for design and code generation  
+- Built with clean code principles and best practices  
+- AI-assisted with **Cursor AI**
+
+## 🛠️ Platforms & Tools
+- **Vercel** → Hosting & deployment  
+- **GitHub** → Version control & collaboration  
+- **Cursor AI** → AI-assisted development environment
 
 ## ⚙️ Installation
 
