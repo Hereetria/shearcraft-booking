@@ -75,6 +75,7 @@ Built with cutting-edge technologies, it delivers an intuitive user experience w
 
 ### 🗄️ Database & Backend
 - **PostgreSQL** (ACID compliant)  
+- **Neon** → Cloud-hosted PostgreSQL with serverless scaling  
 - **Prisma ORM** with migrations  
 - **Next.js API Routes** for serverless APIs  
 
