@@ -3,6 +3,8 @@
 ShearCraft Booking is a comprehensive, modern web application for barber shops to manage appointments and for customers to book services seamlessly.  
 Built with cutting-edge technologies, it delivers an intuitive user experience with robust security and real-time functionality.
 
+[![Built with Cursor AI](https://img.shields.io/badge/Built%20with-Cursor%20AI-00bcd4?style=for-the-badge&logo=cursor)](https://cursor.sh)
+
 ## 🚀 Live Demo
 [![Live Demo](https://img.shields.io/badge/Live-Demo-blue?style=for-the-badge&logo=vercel)](https://shearcraft-booking.vercel.app)
 
