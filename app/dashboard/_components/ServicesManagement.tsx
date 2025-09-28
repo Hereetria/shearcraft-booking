@@ -4,7 +4,6 @@ import { useState, useEffect } from "react";
 import {
   Settings,
   Search,
-  Filter,
   Plus,
   Edit,
   Trash2,

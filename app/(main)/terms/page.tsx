@@ -1,6 +1,5 @@
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import AuthBackground from "@/app/(auth)/_components/AuthBackground";
 import Navbar from "@/components/layout/navbar/Navbar";
 import Footer from "@/components/layout/footer/Footer";
 

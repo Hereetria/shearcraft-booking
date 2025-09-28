@@ -6,12 +6,13 @@ import { userService } from "@/services/userService";
 import { refreshTokenService } from "@/services/refreshTokenService";
 import { AppRole } from "@/types/appRole";
 import { JWT } from "next-auth/jwt";
+import { getEnvVar } from "@/lib/getEnvVar";
 
 export const authOptions: NextAuthOptions = {
   providers: [
     GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID!,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+      clientId: getEnvVar("GOOGLE_CLIENT_ID"),
+      clientSecret: getEnvVar("GOOGLE_CLIENT_SECRET"),
     }),
     CredentialsProvider({
       name: "Credentials",

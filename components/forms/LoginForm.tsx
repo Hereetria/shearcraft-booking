@@ -20,7 +20,7 @@ export interface LoginFormRef {
 }
 
 const LoginForm = forwardRef<LoginFormRef, LoginFormProps>(
-  ({ onDemoLogin }, ref) => {
+  ({ onDemoLogin: _onDemoLogin }, ref) => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [isLoading, setIsLoading] = useState(false);

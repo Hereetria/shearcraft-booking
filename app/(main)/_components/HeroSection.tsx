@@ -9,7 +9,7 @@ export default function HeroSection() {
         <div className="flex flex-col items-center text-center">
           <div className="mb-4 inline-flex items-center gap-2 text-white/90">
             <Scissors className="h-5 w-5" />
-            <span className="text-sm font-medium">BarberBook</span>
+            <span className="text-sm font-medium">ShearCraft</span>
           </div>
           <h1 className="text-4xl font-semibold tracking-tight text-white md:text-6xl">
             Effortless barber appointments

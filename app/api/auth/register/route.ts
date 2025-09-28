@@ -6,8 +6,9 @@ import { z } from "zod"
 import { validate } from "@/lib/validation/validate"
 import { handleError } from "@/lib/errors/errorHandler"
 import { RegisterResponse } from "@/types/apiResponses"
+import { checkRateLimit } from "@/lib/rateLimit"
 
-export const registerSchema = z.object({
+const registerSchema = z.object({
   name: z.string().min(1),
   email: z.email(),
   password: z.string().min(6),
@@ -15,6 +16,9 @@ export const registerSchema = z.object({
 
 export async function POST(req: NextRequest): Promise<NextResponse<RegisterResponse>> {
   try {
+    const rateLimitRes = await checkRateLimit("register", req, 3, { amount: 10, unit: "m" })
+    if (rateLimitRes) return rateLimitRes;
+    
     const body = validate(registerSchema, await req.json())
     const created = await userService.create(body)
     const verificationToken = await tokenService.createVerificationToken(created.id)

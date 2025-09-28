@@ -196,7 +196,7 @@ export function getAvailableSlotsForDuration(
   allSlots: Array<{ id: string; time: string; isAvailable: boolean }>,
   requiredSlots: number,
   businessHours: { start: number; end: number },
-  lunchBreak: { start: string; end: string } = { start: "12:00", end: "13:00" }
+  _lunchBreak: { start: string; end: string } = { start: "12:00", end: "13:00" }
 ): Array<{ id: string; time: string; isAvailable: boolean }> {
   return allSlots.filter(slot => {
     if (!slot.isAvailable) return false;

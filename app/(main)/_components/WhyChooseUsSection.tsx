@@ -59,7 +59,7 @@ export default function WhyChooseUsSection({
             Why choose us
           </h2>
           <p className="mt-2 text-sm md:text-base text-gray-600 dark:text-gray-400">
-            A few reasons customers love BarberBook.
+            A few reasons customers love ShearCraft.
           </p>
         </div>
 

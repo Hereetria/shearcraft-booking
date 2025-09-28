@@ -1,27 +1,25 @@
 import { NextRequest, NextResponse } from "next/server"
 import { requireAuth } from "@/lib/auth/requireAuth"
 import { requireRole } from "@/lib/auth/requireRole"
-import { validate } from "@/lib/validation/validate"
 import { handleError } from "@/lib/errors/errorHandler"
 import { bookingService } from "@/services/bookingService"
 import { requireParam } from "@/lib/requireParam"
-import { z } from "zod"
 import { Role } from "@prisma/client"
 import { notFoundError } from "@/lib/errors/httpErrors"
 import { RouteContext } from "@/types/routeTypes"
 
-const updateBookingSchema = z.object({
-  serviceId: z.uuid().optional(),
-  packageId: z.uuid().optional(),
-  duration: z.number().int().positive().optional(),
-  dateTime: z.iso.datetime().optional(),
-}).refine(
-  (data) =>
-    (data.serviceId && !data.packageId) ||
-    (!data.serviceId && data.packageId) ||
-    (!data.serviceId && !data.packageId),
-  { message: "Booking must have either a service OR a package" }
-).strict()
+// const updateBookingSchema = z.object({
+//   serviceId: z.uuid().optional(),
+//   packageId: z.uuid().optional(),
+//   duration: z.number().int().positive().optional(),
+//   dateTime: z.iso.datetime().optional(),
+// }).refine(
+//   (data) =>
+//     (data.serviceId && !data.packageId) ||
+//     (!data.serviceId && data.packageId) ||
+//     (!data.serviceId && !data.packageId),
+//   { message: "Booking must have either a service OR a package" }
+// ).strict()
 
 export async function GET(_req: NextRequest, context: RouteContext) {
   try {

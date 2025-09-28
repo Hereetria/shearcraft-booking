@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button";
 import { Calendar, Clock, Loader2, AlertCircle } from "lucide-react";
 import Link from "next/link";
 import BookingCard from "./BookingCard";
-import { formatDate } from "@/lib/reservation-utils";
 
 interface Booking {
   id: string;

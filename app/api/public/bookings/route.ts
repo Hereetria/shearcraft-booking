@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { handleError } from "@/lib/errors/errorHandler";
 import { bookingService } from "@/services/bookingService";
 import { z } from "zod";
+import { checkRateLimit } from "@/lib/rateLimit";
 
 const querySchema = z.object({
   date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "Date must be in YYYY-MM-DD format"),
@@ -10,6 +11,9 @@ const querySchema = z.object({
 
 export async function GET(req: NextRequest) {
   try {
+    const rateLimitRes = await checkRateLimit("public-bookings", req, 30, { amount: 1, unit: "m" })
+    if (rateLimitRes) return handleError(rateLimitRes)
+      
     const { searchParams } = new URL(req.url);
     const userIdParam = searchParams.get("userId");
     

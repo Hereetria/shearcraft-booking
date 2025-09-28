@@ -2,6 +2,7 @@ import nodemailer from "nodemailer"
 import { render } from "@react-email/render"
 import { VerificationEmail } from "@/lib/mailer/templates/VerificationEmail"
 import { PasswordResetEmail } from "@/lib/mailer/templates/PasswordResetEmail"
+import { getEnvVar } from "@/lib/getEnvVar"
 
 interface EmailOptions {
   to: string
@@ -11,20 +12,20 @@ interface EmailOptions {
 }
 
 const transporter = nodemailer.createTransport({
-  host: process.env.SMTP_HOST || "smtp.gmail.com",
-  port: parseInt(process.env.SMTP_PORT || "587"),
-  secure: process.env.SMTP_SECURE === "true",
+  host: getEnvVar("SMTP_HOST"),
+  port: parseInt(getEnvVar("SMTP_PORT")),
+  secure: getEnvVar("SMTP_SECURE") === "true",
   auth: {
-    user: process.env.SMTP_USER,
-    pass: process.env.SMTP_PASS,
+    user: getEnvVar("SMTP_USER"),
+    pass: getEnvVar("SMTP_PASS"),
   },
-})
+});
 
 export const mailerService = {
   async sendEmail({ to, subject, html, text }: EmailOptions): Promise<void> {
     try {
       await transporter.sendMail({
-        from: process.env.SMTP_FROM || process.env.SMTP_USER,
+        from: getEnvVar("SMTP_FROM") || getEnvVar("SMTP_USER"),
         to,
         subject,
         html,
@@ -41,7 +42,7 @@ export const mailerService = {
     name: string,
     verificationToken: string
   ): Promise<void> {
-    const verificationUrl = `${process.env.NEXTAUTH_URL}/api/auth/verify-email?token=${encodeURIComponent(
+    const verificationUrl = `${getEnvVar("NEXTAUTH_URL")}/api/auth/verify-email?token=${encodeURIComponent(
       verificationToken
     )}`
 
@@ -75,7 +76,7 @@ export const mailerService = {
     name: string,
     resetToken: string
   ): Promise<void> {
-    const resetUrl = `${process.env.NEXTAUTH_URL}/reset-password?token=${encodeURIComponent(
+    const resetUrl = `${getEnvVar("NEXTAUTH_URL")}/reset-password?token=${encodeURIComponent(
       resetToken
     )}`
 

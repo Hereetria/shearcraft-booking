@@ -4,6 +4,7 @@ import { handleError } from "@/lib/errors/errorHandler";
 import { bookingService } from "@/services/bookingService";
 import { validate } from "@/lib/validation/validate";
 import { z } from "zod";
+import { checkRateLimit } from "@/lib/rateLimit";
 
 const bookingSchema = z.object({
   serviceIds: z.array(z.uuid()).optional(),
@@ -33,6 +34,9 @@ export async function GET() {
 
 export async function POST(req: NextRequest) {
   try {
+    const rateLimitRes = await checkRateLimit("create-booking", req, 5, { amount: 1, unit: "m" })
+    if (rateLimitRes) return handleError(rateLimitRes)
+      
     const { user } = await requireAuth();
     const body = validate(bookingSchema, await req.json());
 

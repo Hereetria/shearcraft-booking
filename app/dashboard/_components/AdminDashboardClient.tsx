@@ -15,7 +15,6 @@ export default function AdminDashboardClient() {
   const { data: session } = useSession();
   const [activeSection, setActiveSection] = useState<AdminSection>("overview");
   const [isLoading, setIsLoading] = useState(true);
-  // Sidebar state is now managed globally via context
 
   useEffect(() => {
     const timer = setTimeout(() => setIsLoading(false), 300);

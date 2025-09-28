@@ -52,7 +52,6 @@ export default function DatePicker({ selectedDate, onDateChange }: DatePickerPro
   };
 
   const isToday = selectedDate.toDateString() === new Date().toDateString();
-  const isPastDate = selectedDate < new Date(new Date().setHours(0, 0, 0, 0));
 
   return (
     <div className="space-y-4">

@@ -8,49 +8,49 @@ datasource db {
 }
 
 model User {
-  id                String                @id @default(uuid())
-  name              String
-  email             String                @unique
-  passwordHash      String?
-  role              Role                  @default(CUSTOMER)
-  isTrusted         Boolean               @default(false)
-  emailVerified     Boolean               @default(false)
-  emailVerifiedAt   DateTime?
-  image             String?
-  verificationToken VerificationToken[]
+  id                 String               @id @default(uuid())
+  name               String
+  email              String               @unique
+  passwordHash       String?
+  role               Role                 @default(CUSTOMER)
+  isTrusted          Boolean              @default(false)
+  createdAt          DateTime             @default(now())
+  updatedAt          DateTime             @updatedAt
+  emailVerified      Boolean              @default(false)
+  emailVerifiedAt    DateTime?
+  image              String?
+  bookings           Booking[]
   passwordResetToken PasswordResetToken[]
-  refreshTokens     RefreshToken[]
-  bookings          Booking[]
-  createdAt         DateTime              @default(now())
-  updatedAt         DateTime              @updatedAt
+  refreshTokens      RefreshToken[]
+  verificationToken  VerificationToken[]
 }
 
 model VerificationToken {
   id        String   @id @default(uuid())
   token     String   @unique
   userId    String
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   expiresAt DateTime
   createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model PasswordResetToken {
   id        String   @id @default(uuid())
   token     String   @unique
   userId    String
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   expiresAt DateTime
   createdAt DateTime @default(now())
   used      Boolean  @default(false)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model RefreshToken {
   id        String   @id @default(uuid())
   token     String   @unique
   userId    String
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   expiresAt DateTime
   createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Service {
@@ -58,21 +58,21 @@ model Service {
   name      String
   duration  Int
   price     Float
-  bookings  Booking[]
-  packages  PackageService[]
   createdAt DateTime         @default(now())
   updatedAt DateTime         @updatedAt
+  bookings  Booking[]
+  packages  PackageService[]
 }
 
 model Package {
   id        String           @id @default(uuid())
   name      String
   price     Float
-  duration  Int  
-  services  PackageService[]
-  bookings  Booking[]
+  duration  Int
   createdAt DateTime         @default(now())
   updatedAt DateTime         @updatedAt
+  bookings  Booking[]
+  services  PackageService[]
 }
 
 model PackageService {
@@ -85,35 +85,28 @@ model PackageService {
 }
 
 model Booking {
-  id        String        @id @default(uuid())
-  user      User          @relation(fields: [userId], references: [id])
-  userId    String
-
-  service   Service?      @relation(fields: [serviceId], references: [id])
-  serviceId String?
-
-  package   Package?      @relation(fields: [packageId], references: [id])
-  packageId String?
-
-  dateTime  DateTime
-  duration  Int 
-  services  Json? 
-  status    BookingStatus @default(PENDING)
-  
+  id              String        @id @default(uuid())
+  userId          String
+  serviceId       String?
+  packageId       String?
+  dateTime        DateTime
+  status          BookingStatus @default(PENDING)
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  duration        Int
+  services        Json?
   parentBookingId String?
-  parentBooking   Booking? @relation("BookingSlots", fields: [parentBookingId], references: [id], onDelete: Cascade)
-  slotBookings    Booking[] @relation("BookingSlots")
-  
-  createdAt DateTime      @default(now())
-  updatedAt DateTime      @updatedAt
+  package         Package?      @relation(fields: [packageId], references: [id])
+  parentBooking   Booking?      @relation("BookingSlots", fields: [parentBookingId], references: [id], onDelete: Cascade)
+  slotBookings    Booking[]     @relation("BookingSlots")
+  service         Service?      @relation(fields: [serviceId], references: [id])
+  user            User          @relation(fields: [userId], references: [id])
 }
 
 enum Role {
   CUSTOMER
   ADMIN
 }
-
-
 
 enum BookingStatus {
   PENDING

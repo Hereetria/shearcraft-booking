@@ -5,6 +5,7 @@ import { z } from "zod"
 import { validate } from "@/lib/validation/validate"
 import { handleError } from "@/lib/errors/errorHandler"
 import bcrypt from "bcryptjs"
+import { checkRateLimit } from "@/lib/rateLimit"
 
 const resetPasswordSchema = z.object({
   token: z.string().min(1, "Token is required"),
@@ -13,6 +14,9 @@ const resetPasswordSchema = z.object({
 
 export async function POST(req: NextRequest) {
   try {
+    const rateLimitRes = await checkRateLimit("reset-password", req, 3, { amount: 10, unit: "m" })
+    if (rateLimitRes) return rateLimitRes
+    
     const body = validate(resetPasswordSchema, await req.json())
     const tokenData = await tokenService.validatePasswordResetToken(body.token)
 

@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Providers } from "@/app/providers";
-import Footer from "@/components/layout/footer/Footer";
 import Navbar from "@/components/layout/navbar/Navbar";
 import { AutoRefreshSession } from "@/components/auth/AutoRefreshSession";
 import MainContentWrapper from "../components/layout/MainContentWrapper";
@@ -29,7 +28,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="h-full">
+    <html lang="en" className={`${geistSans.variable} ${geistMono.variable} h-full`}>
       <body className="antialiased flex flex-col min-h-screen">
         <Providers>
           <Navbar />

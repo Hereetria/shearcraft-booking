@@ -10,7 +10,7 @@ interface LogoutButtonProps {
   variant: "light" | "dark";
 }
 
-const LogoutButton: React.FC<LogoutButtonProps> = ({ variant }) => {
+const LogoutButton: React.FC<LogoutButtonProps> = ({ variant: _variant }) => {
   const [isLoggingOut, setIsLoggingOut] = useState(false);
 
   const handleLogout = async () => {
@@ -22,12 +22,11 @@ const LogoutButton: React.FC<LogoutButtonProps> = ({ variant }) => {
       });
     } catch (error) {
       console.error("Logout error:", error);
-    } finally {
+      // Only reset loading state if there's an error
       setIsLoggingOut(false);
     }
+    // Don't reset loading state on success - let the redirect happen
   };
-
-  const isDashboard = variant === "dark";
 
   return (
     <Button

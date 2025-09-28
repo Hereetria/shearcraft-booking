@@ -55,7 +55,7 @@ export default function MobileNav({
   isAdmin,
   isDashboard = false,
   isHomePage = false,
-  isScrolled = false,
+  isScrolled: _isScrolled = false,
 }: MobileNavProps) {
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const [isOpen, setIsOpen] = useState(false);

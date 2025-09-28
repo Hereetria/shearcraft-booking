@@ -1,24 +1,22 @@
-import { NextRequest, NextResponse } from "next/server"
 import { requireAuth } from "@/lib/auth/requireAuth"
 import { requireRole } from "@/lib/auth/requireRole"
-import { validate } from "@/lib/validation/validate"
 import { handleError } from "@/lib/errors/errorHandler"
 import { bookingService } from "@/services/bookingService"
-import { z } from "zod"
 import { Role } from "@prisma/client"
+import { NextResponse } from "next/server"
 
-const createBookingSchema = z.object({
-  userId: z.uuid(),
-  serviceId: z.uuid().optional(),
-  packageId: z.uuid().optional(),
-  duration: z.number().int().positive(),
-  dateTime: z.iso.datetime(),
-}).refine(
-  (data) =>
-    (data.serviceId && !data.packageId) ||
-    (!data.serviceId && data.packageId),
-  { message: "Booking must have either a service OR a package" }
-).strict()
+// const createBookingSchema = z.object({
+//   userId: z.uuid(),
+//   serviceId: z.uuid().optional(),
+//   packageId: z.uuid().optional(),
+//   duration: z.number().int().positive(),
+//   dateTime: z.iso.datetime(),
+// }).refine(
+//   (data) =>
+//     (data.serviceId && !data.packageId) ||
+//     (!data.serviceId && data.packageId),
+//   { message: "Booking must have either a service OR a package" }
+// ).strict()
 
 export async function GET() {
   try {

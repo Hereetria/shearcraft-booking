@@ -1,6 +1,4 @@
-import Link from "next/link";
 import { Card, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { Clock } from "lucide-react";
 import BookButton from "@/components/common/BookButton";
 
@@ -33,7 +31,6 @@ export default function GradientOfferCard({
         className || ""
       }`}
     >
-      {/* decorative gradient border */}
       <div
         className="absolute inset-0 rounded-xl p-[1px] pointer-events-none"
         style={{
@@ -53,7 +50,6 @@ export default function GradientOfferCard({
           <p className="mt-4 text-base font-semibold text-emerald-600">${price}</p>
         </div>
 
-        {/* link button (no client logic needed) */}
         <BookButton
           title={title}
           buttonLabel={buttonLabel}

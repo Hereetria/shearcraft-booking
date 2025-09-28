@@ -1,5 +1,5 @@
 import React from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import AuthBackground from "@/app/(auth)/_components/AuthBackground";
 import SocialAuth from "@/app/(auth)/_components/SocialAuth";
 import SignUpForm from "@/components/forms/SignUpForm";

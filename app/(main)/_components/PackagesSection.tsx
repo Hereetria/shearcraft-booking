@@ -13,7 +13,10 @@ type PackagesSectionProps = {
   onBook?: (id: string) => void;
 };
 
-export default function PackagesSection({ packages, onBook }: PackagesSectionProps) {
+export default function PackagesSection({
+  packages,
+  onBook: _onBook,
+}: PackagesSectionProps) {
   return (
     <section
       id="packages"
