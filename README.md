@@ -104,6 +104,26 @@ Built with Next.js, Tailwind CSS, and shadcn/ui, it delivers an intuitive user e
   
 <br>
 
+## 🖼️ Screenshots
+Shown below in order:  
+**1. Landing** · **2. About** · **3. Login*<br>
+**4. Reservation** · **5. My Bookings** · **6. Dashboard**
+
+
+<p align="center">
+  <img src="./public/screenshots/landing.png" width="32%">
+  <img src="./public/screenshots/about.png" width="32%">
+  <img src="./public/screenshots/login.png" width="32%">
+</p>
+
+<p align="center">
+  <img src="./public/screenshots/reservation.png" width="32%">
+  <img src="./public/screenshots/my-bookings.png" width="32%">
+  <img src="./public/screenshots/dashboard.png" width="32%">
+</p>
+
+<br>
+
 ## 🧰 Tech Stack
 
 <p>
