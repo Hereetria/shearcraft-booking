@@ -1,4 +1,4 @@
-# ShearCraft Booking — Modern Barber Booking Platform
+# ✂️ ShearCraft Booking — Modern Barber Booking Platform
 
 <br>
 
@@ -8,7 +8,7 @@
 
 <br>
 
-## 🎯 Project Overview
+## 📌 Project Overview
 
 ShearCraft Booking is a comprehensive, modern web application that enables barber shops to manage appointments and customers to book services seamlessly.
 Built with Next.js, Tailwind CSS, and shadcn/ui, it delivers an intuitive user experience with robust security and fully responsive design.
@@ -121,7 +121,7 @@ Built with Next.js, Tailwind CSS, and shadcn/ui, it delivers an intuitive user e
 
 <br>
 
-## ⚙️ Installation
+## 📥 Installation
 
 ### Prerequisites
 - Node.js 18+  
