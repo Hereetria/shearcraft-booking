@@ -112,6 +112,7 @@ Built with Next.js, Tailwind CSS, and shadcn/ui, it delivers an intuitive user e
   <img src="https://img.shields.io/badge/Tailwind%20CSS-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white" alt="Tailwind CSS Badge" height="32" />
   <img src="https://img.shields.io/badge/shadcn/ui-000000?style=for-the-badge&logo=shadcnui&logoColor=white" alt="shadcn/ui Badge" height="32" />
   <img src="https://img.shields.io/badge/Prisma-2D3748?style=for-the-badge&logo=prisma&logoColor=white" alt="Prisma Badge" height="32" />
+  <br>
   <img src="https://img.shields.io/badge/NextAuth.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white" alt="NextAuth.js Badge" height="32" />
   <img src="https://img.shields.io/badge/bcryptjs-003B57?style=for-the-badge&logo=npm&logoColor=white" alt="bcryptjs Badge" height="32" />
   <img src="https://img.shields.io/badge/Nodemailer-0095D5?style=for-the-badge&logo=gmail&logoColor=white" alt="Nodemailer Badge" height="32" />
