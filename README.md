@@ -121,7 +121,7 @@ Built with Next.js, Tailwind CSS, and shadcn/ui, it delivers an intuitive user e
 
 <br>
 
-## 📥 ⚙️ Installation
+## ⚙️ Installation
 
 ### Prerequisites
 - Node.js 18+  
@@ -139,3 +139,17 @@ cp .env.example .env   # Configure variables in this file
 
 pnpm db:migrate        # Run database migrations
 pnpm dev               # Start development server
+
+```
+
+<br>
+
+## 📜 License
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+
+This project is licensed under the terms described in the [LICENSE](./LICENSE) file.
+
+---
+
+© 2025 Yusuf Okan Sirkeci — [Hereetria](https://github.com/Hereetria)
