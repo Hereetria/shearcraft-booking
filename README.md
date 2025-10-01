@@ -106,7 +106,7 @@ Built with Next.js, Tailwind CSS, and shadcn/ui, it delivers an intuitive user e
 
 ## 🖼️ Screenshots
 Shown below in order:  
-**1. Landing** · **2. About** · **3. Login*<br>
+**1. Landing** · **2. About** · **3. Login**<br>
 **4. Reservation** · **5. My Bookings** · **6. Dashboard**
 
 
