@@ -107,46 +107,19 @@ Built with Next.js, Tailwind CSS, and shadcn/ui, it delivers an intuitive user e
 ## 🧰 Tech Stack
 
 <p>
-  <!-- Core -->
-  <a href="https://nextjs.org/">
-    <img src="https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white" alt="Next.js Badge" height="32" />
-  </a>
-  <a href="https://www.typescriptlang.org/">
-    <img src="https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white" alt="TypeScript Badge" height="32" />
-  </a>
-  <a href="https://tailwindcss.com/">
-    <img src="https://img.shields.io/badge/Tailwind_CSS-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white" alt="Tailwind CSS Badge" height="32" />
-  </a>
-  <a href="https://ui.shadcn.com/">
-    <img src="https://img.shields.io/badge/shadcn/ui-000000?style=for-the-badge&logo=shadcnui&logoColor=white" alt="shadcn/ui Badge" height="32" />
-  </a>
-
-  <!-- Backend & Auth -->
-  <a href="https://www.prisma.io/">
-    <img src="https://img.shields.io/badge/Prisma-2D3748?style=for-the-badge&logo=prisma&logoColor=white" alt="Prisma Badge" height="32" />
-  </a>
-  <a href="https://next-auth.js.org/">
-    <img src="https://img.shields.io/badge/NextAuth.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white" alt="NextAuth.js Badge" height="32" />
-  </a>
-  <a href="https://www.npmjs.com/package/bcryptjs">
-    <img src="https://img.shields.io/badge/bcryptjs-003B57?style=for-the-badge&logo=npm&logoColor=white" alt="bcryptjs Badge" height="32" />
-  </a>
-  <a href="https://nodemailer.com/">
-    <img src="https://img.shields.io/badge/Nodemailer-0095D5?style=for-the-badge&logo=gmail&logoColor=white" alt="Nodemailer Badge" height="32" />
-  </a>
-
-  <!-- Database -->
-  <a href="https://www.postgresql.org/">
-    <img src="https://img.shields.io/badge/PostgreSQL-4169E1?style=for-the-badge&logo=postgresql&logoColor=white" alt="PostgreSQL Badge" height="32" />
-  </a>
-    <a href="https://vercel.com/">
-    <img src="https://img.shields.io/badge/Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white" alt="Vercel Badge" height="32" />
-  </a>
-  <a href="https://cursor.sh/">
-    <img src="https://img.shields.io/badge/Cursor_AI-FFFFFF?style=for-the-badge&logo=data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBmaWxsPSIjMDAwMDAwIiBkPSJNMTguOTI4MSAxMC41MTU0TDUuMDAwMDEgMS41MDAwMVYyMi41TDEwLjQ0OTUgMTQuMTQ5NUwxNS4wMTQ3IDIyLjUwMDFIMTguOTI4MVYxMC41MTU0Wk0xNi45MjgxIDE4LjUwMDFMMTIuNTEyNyAxMC42NDA1TDE2LjkyODEgOC41MDAwMVYxOC41MDAxWiIvPjwvc3ZnPg==" alt="Cursor AI Badge" height="32" />
-  </a>
+  <img src="https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white" alt="Next.js Badge" height="32" />
+  <img src="https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white" alt="TypeScript Badge" height="32" />
+  <img src="https://img.shields.io/badge/Tailwind%20CSS-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white" alt="Tailwind CSS Badge" height="32" />
+  <img src="https://img.shields.io/badge/shadcn/ui-000000?style=for-the-badge&logo=shadcnui&logoColor=white" alt="shadcn/ui Badge" height="32" />
+  <img src="https://img.shields.io/badge/Prisma-2D3748?style=for-the-badge&logo=prisma&logoColor=white" alt="Prisma Badge" height="32" />
+  <img src="https://img.shields.io/badge/NextAuth.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white" alt="NextAuth.js Badge" height="32" />
+  <img src="https://img.shields.io/badge/bcryptjs-003B57?style=for-the-badge&logo=npm&logoColor=white" alt="bcryptjs Badge" height="32" />
+  <img src="https://img.shields.io/badge/Nodemailer-0095D5?style=for-the-badge&logo=gmail&logoColor=white" alt="Nodemailer Badge" height="32" />
+  <img src="https://img.shields.io/badge/PostgreSQL-4169E1?style=for-the-badge&logo=postgresql&logoColor=white" alt="PostgreSQL Badge" height="32" />
+  <img src="https://img.shields.io/badge/Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white" alt="Vercel Badge" height="32" />
 </p>
 
+<br>
 
 ## 📥 ⚙️ Installation
 
